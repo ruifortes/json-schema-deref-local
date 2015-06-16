@@ -1,12 +1,15 @@
-# json-schema-deref-sync
+# json-schema-deref-local
 
-Dereference JSON pointers in a JSON schemas with their true resolved values.
-Basically a lighter, synchronous version of [json-schema-deref](https://github.com/bojand/json-schema-deref) but omits web references and
-custom loaders.
+Dereference local JSON pointers in a JSON schema with their true resolved values.
+Basically a lighter, local-only version of [json-schema-deref-sync](https://github.com/bojand/json-schema-deref-sync) but omits web references, file references, and custom loaders.
+
+## Why?
+
+This local-only fork removes the dependency on the Node.js `fs` module, allowing it to be used either in Node.js or in a web browser.
 
 ## Installation
 
-`npm install json-schema-deref-sync`
+`npm install SeedScientific/json-schema-deref-local`
 
 ## Overview
 
@@ -28,12 +31,6 @@ Let's say you have the following JSON Schema:
   "properties": {
   "id": {
     "$ref": "#/definitions/id"
-  },
-  "foo": {
-    "$ref": "http://www.mysite.com/myschema.json#/definitions/foo"
-  },
-  "bar": {
-    "$ref": "bar.json"
   }
 }
 ```
@@ -52,23 +49,6 @@ Sometimes you just want that schema to be fully expanded, with `$ref`'s being th
       "minLength": 1,
       "readOnly": true
     }
-  },
-  "properties": {
-    "id": {
-      "description": "unique identifier",
-      "type": "string",
-      "minLength": 1,
-      "readOnly": true
-    },
-    "foo": {
-      "description": "foo property",
-      "readOnly": true,
-      "type": "number"
-    },
-    "bar": {
-      "description": "bar property",
-      "type": "boolean"
-    }
   }
 }
 ```
@@ -77,7 +57,7 @@ This utility lets you do that:
 
 
 ```js
-var deref = require('json-schema-deref-sync');
+var deref = require('json-schema-deref-local');
 var myschema = require('schema.json');
 
 var fullSchema = deref(myschema);
@@ -87,16 +67,13 @@ var fullSchema = deref(myschema);
 
 ### deref(schema, options)
 
-Dereferences `$ref`'s in json schema to actual resolved values. Supports local, and file refs.
+Dereferences `$ref`'s in json schema to actual resolved values. **Supports local refs only** (ie. refs starting with '#' referring to definitions in the same schema file).
 
 Parameters:
 
 ##### `schema`
 The input JSON schema
 
-##### `options`
-
-`baseFolder` - the base folder to get relative path files from. Default is `process.cwd()`
 
 ### deref.getRefPathValue(schema, refPath)
 
