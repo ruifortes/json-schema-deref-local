@@ -29,13 +29,14 @@ Let's say you have the following JSON Schema:
     }
   },
   "properties": {
-  "id": {
-    "$ref": "#/definitions/id"
+    "id": {
+      "$ref": "#/definitions/id"
+    }
   }
 }
 ```
 
-Sometimes you just want that schema to be fully expanded, with `$ref`'s being their (true) resolved values:
+Sometimes you just want that schema to be fully expanded, with `$ref`s being their (true) resolved values:
 
 ```json
 {
@@ -43,6 +44,14 @@ Sometimes you just want that schema to be fully expanded, with `$ref`'s being th
   "title": "Basic Widget",
   "type": "object",
   "definitions": {
+    "id": {
+      "description": "unique identifier",
+      "type": "string",
+      "minLength": 1,
+      "readOnly": true
+    }
+  },
+  "properties": {
     "id": {
       "description": "unique identifier",
       "type": "string",
